@@ -74,3 +74,50 @@ class Cat {
   // Pavlov says meow to me!
   // true
 
+function curriedSum(numArgs){
+    const numbers = [];
+    return function _curriedSum (num) {
+        numbers.push(num)
+        if(numArgs === numbers.length){
+            return numbers.reduce((acc, num) => acc + num, 0);
+        } else {
+            // console.log(numbers);
+            return _curriedSum;
+        }
+    }
+}
+
+// const threeSum = curriedSum(3);
+// threeSum(1)
+// threeSum(2)
+// console.log(threeSum(3));
+
+Function.prototype.currySplat = function (numArgs, ...bindArgs){
+    let numbers = bindArgs;
+    return function _curry (...args){
+        numbers = numbers.concat(args);
+
+        if (numArgs === numbers.length){
+            return numbers.reduce((acc, num) => acc + num, 0);
+        } else {
+            return _curry;
+        }
+    }
+}
+
+
+Function.prototype.curry = function (numArgs){
+    const numbers = [];
+    return function _curry (){
+        let array = Array.from(arguments);
+        numbers.push.apply(numbers, array);        
+        if (numArgs === numbers.length){
+            return numbers.reduce((acc, num) => acc + num, 0);
+        } else {           
+            return _curry;
+        }
+    }
+}
+const threeSum = Array.curry(3);
+threeSum(1, 2)
+console.log(threeSum(5));
